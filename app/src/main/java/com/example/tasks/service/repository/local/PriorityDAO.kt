@@ -7,8 +7,12 @@ import com.example.tasks.service.model.PriorityModel
 
 @Dao
 interface PriorityDAO {
+    @Query("SELECT * FROM priority")
+    fun getAll(): List<PriorityModel>
+
     @Insert
     fun save(list: List<PriorityModel>)
-    @Query("Delete from priority")
+
+    @Query("DELETE FROM priority")
     fun clear()
 }
