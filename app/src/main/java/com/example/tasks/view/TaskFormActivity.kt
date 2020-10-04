@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.tasks.R
+import com.example.tasks.service.model.TaskModel
 import com.example.tasks.viewmodel.TaskFormViewModel
 import kotlinx.android.synthetic.main.activity_register.button_save
 import kotlinx.android.synthetic.main.activity_task_form.*
@@ -19,6 +20,7 @@ class TaskFormActivity : AppCompatActivity(), View.OnClickListener,
     DatePickerDialog.OnDateSetListener {
 
     private lateinit var mViewModel: TaskFormViewModel
+    private val mListPriorityId: MutableList<Int> = arrayListOf()
     private val mDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,12 +40,23 @@ class TaskFormActivity : AppCompatActivity(), View.OnClickListener,
 
         when (v.id) {
             R.id.button_save -> {
-
+                handleSave()
             }
             R.id.button_date -> {
                 showDatePicker()
             }
         }
+    }
+
+    private fun handleSave() {
+        val task = TaskModel().apply {
+            this.description = edit_description.text.toString()
+            this.dueDate = button_date.text.toString()
+            this.priorityId = mListPriorityId[spinner_priority.selectedItemPosition]
+            this.complete = check_complete.isChecked
+        }
+
+        mViewModel.save(task)
     }
 
     private fun showDatePicker() {
@@ -63,6 +76,7 @@ class TaskFormActivity : AppCompatActivity(), View.OnClickListener,
 
             for (priorityModel in it) {
                 list.add(priorityModel.description)
+                mListPriorityId.add(priorityModel.id)
             }
 
             val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, list)
