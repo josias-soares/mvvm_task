@@ -34,14 +34,12 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                 mSharedPreferences.store(PERSON_KEY, response.personKey)
                 mSharedPreferences.store(PERSON_NAME, response.name)
 
-                println(response.toString())
                 mLogin.value = ValidationListener()
             }
 
             override fun onFailure(failure: String) {
                 mLogin.value = ValidationListener(failure)
             }
-
         })
     }
 
