@@ -1,4 +1,4 @@
-package com.example.tasks.service.repository
+package com.example.tasks.service.repository.local
 
 import android.content.Context
 import android.content.SharedPreferences
