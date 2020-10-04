@@ -22,9 +22,10 @@ class PriorityRepository(context: Context) {
             override fun onResponse(
                 call: Call<List<PriorityModel>>, response: Response<List<PriorityModel>>
             ) {
+                mPriorityDAO.clear()
+
                 if (response.code() == SUCCESS) {
                     response.body()?.let {
-                        mPriorityDAO.clear()
                         mPriorityDAO.save(it)
                     }
                 }

@@ -24,7 +24,7 @@ interface TaskService {
         @Field("Description") description: String,
         @Field("DueDate") dueDate: String,
         @Field("Complete") complete: Boolean
-    ): Call<TaskModel>
+    ): Call<Boolean>
 
     //@PUT("Task")
     @HTTP(method = "PUT", path = "Task", hasBody = true)
