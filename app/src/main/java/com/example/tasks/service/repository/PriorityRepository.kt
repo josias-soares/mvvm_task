@@ -37,4 +37,6 @@ class PriorityRepository(context: Context) {
     }
 
     fun list() = mPriorityDAO.getAll()
+
+    fun get(id: Int) = mPriorityDAO.getById(id)
 }
