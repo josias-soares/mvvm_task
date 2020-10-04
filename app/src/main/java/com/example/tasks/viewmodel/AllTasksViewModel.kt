@@ -16,8 +16,8 @@ class AllTasksViewModel(application: Application) : AndroidViewModel(application
 
     fun list() {
         mTaskRepository.all(object : APIListener<List<TaskModel>> {
-            override fun onSuccess(response: List<TaskModel>) {
-                mTasks.value = response
+            override fun onSuccess(model: List<TaskModel>) {
+                mTasks.value = model
             }
 
             override fun onFailure(failure: String) {
@@ -27,5 +27,32 @@ class AllTasksViewModel(application: Application) : AndroidViewModel(application
         })
     }
 
+    fun complete(id: Int) {
+        updateStatus(id, true)
+    }
 
+    fun undo(id: Int) {
+        updateStatus(id, false)
+    }
+
+    private fun updateStatus(id: Int, complete: Boolean) {
+        mTaskRepository.updateStatus(id, complete, object : APIListener<Boolean> {
+            override fun onSuccess(model: Boolean) {
+                list()
+            }
+
+            override fun onFailure(failure: String) {}
+        })
+    }
+
+
+    fun delete(id: Int) {
+        mTaskRepository.delete(id, object : APIListener<Boolean> {
+            override fun onSuccess(model: Boolean) {
+                list()
+            }
+
+            override fun onFailure(failure: String) {}
+        })
+    }
 }

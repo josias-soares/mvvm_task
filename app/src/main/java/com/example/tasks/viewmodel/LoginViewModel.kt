@@ -32,12 +32,12 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
      */
     fun doLogin(email: String, password: String) {
         mPersonRepository.login(email, password, object : APIListener<HeaderModel> {
-            override fun onSuccess(response: HeaderModel) {
-                mSharedPreferences.store(TOKEN_KEY, response.token)
-                mSharedPreferences.store(PERSON_KEY, response.personKey)
-                mSharedPreferences.store(PERSON_NAME, response.name)
+            override fun onSuccess(model: HeaderModel) {
+                mSharedPreferences.store(TOKEN_KEY, model.token)
+                mSharedPreferences.store(PERSON_KEY, model.personKey)
+                mSharedPreferences.store(PERSON_NAME, model.name)
 
-                RetrofitClient.addHeader(response.token, response.personKey)
+                RetrofitClient.addHeader(model.token, model.personKey)
 
                 mLogin.value = ValidationListener()
             }
