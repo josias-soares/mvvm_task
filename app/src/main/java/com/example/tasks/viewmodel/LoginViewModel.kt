@@ -11,11 +11,13 @@ import com.example.tasks.service.constants.TaskConstants.SHARED.PERSON_NAME
 import com.example.tasks.service.listener.APIListener
 import com.example.tasks.service.listener.ValidationListener
 import com.example.tasks.service.repository.PersonRepository
+import com.example.tasks.service.repository.PriorityRepository
 import com.example.tasks.service.repository.local.SecurityPreferences
 
 class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
     private val mPersonRepository = PersonRepository(application)
+    private val mPriorityRepository = PriorityRepository(application)
     private val mSharedPreferences = SecurityPreferences(application)
 
     private val mLogin = MutableLiveData<ValidationListener>()
@@ -49,7 +51,14 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     fun verifyLoggedUser() {
         val token = mSharedPreferences.get(TOKEN_KEY)
         val personKey = mSharedPreferences.get(PERSON_KEY)
-        mLoggedUser.value = token.isNotEmpty() && personKey.isNotEmpty()
+
+        val logged = token.isNotEmpty() && personKey.isNotEmpty()
+        if (!logged){
+            mPriorityRepository.all()
+        }
+
+        mLoggedUser.value = logged
+
 
     }
 
