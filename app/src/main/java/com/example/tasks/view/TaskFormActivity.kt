@@ -50,7 +50,7 @@ class TaskFormActivity : AppCompatActivity(), View.OnClickListener,
 
             button_save.setText(R.string.altera_tarefa)
         } else {
-            button_save.setText(R.string.adicionar_tarefa)
+            button_save.setText(R.string.update_task)
         }
 
     }
@@ -105,10 +105,14 @@ class TaskFormActivity : AppCompatActivity(), View.OnClickListener,
 
         mViewModel.taskCreated.observe(this, Observer {
             if (it.success()) {
-                Toast.makeText(this, "Task Created!", Toast.LENGTH_LONG).show()
+                if (mTaskId == 0){
+                    toast(R.string.task_created)
+                } else {
+                    toast(R.string.task_updated)
+                }
                 finish()
             } else {
-                Toast.makeText(this, it.failure(), Toast.LENGTH_LONG).show()
+                toast(it.failure())
             }
         })
 
@@ -120,6 +124,14 @@ class TaskFormActivity : AppCompatActivity(), View.OnClickListener,
             val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(it.dueDate)
             button_date.text = mDateFormat.format(date!!)
         })
+    }
+
+    private fun toast(messageResId: Int) {
+        Toast.makeText(this, messageResId, Toast.LENGTH_LONG).show()
+    }
+
+    private fun toast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 
     private fun getIndexPriority(priorityId: Int): Int {

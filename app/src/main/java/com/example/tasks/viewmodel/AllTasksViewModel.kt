@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.tasks.service.listener.APIListener
+import com.example.tasks.service.listener.ValidationListener
 import com.example.tasks.service.model.TaskModel
 import com.example.tasks.service.repository.TaskRepository
 
@@ -13,6 +14,9 @@ class AllTasksViewModel(application: Application) : AndroidViewModel(application
 
     private val mTasks = MutableLiveData<List<TaskModel>>()
     var tasks: LiveData<List<TaskModel>> = mTasks
+
+    private val mTaskRemoved = MutableLiveData<ValidationListener>()
+    var taskRemoved: LiveData<ValidationListener> = mTaskRemoved
 
     fun list() {
         mTaskRepository.all(object : APIListener<List<TaskModel>> {
@@ -50,9 +54,12 @@ class AllTasksViewModel(application: Application) : AndroidViewModel(application
         mTaskRepository.delete(id, object : APIListener<Boolean> {
             override fun onSuccess(model: Boolean) {
                 list()
+                mTaskRemoved.value = ValidationListener()
             }
 
-            override fun onFailure(failure: String) {}
+            override fun onFailure(failure: String) {
+                mTaskRemoved.value = ValidationListener(failure)
+            }
         })
     }
 }
