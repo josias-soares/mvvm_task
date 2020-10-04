@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.tasks.service.HeaderModel
+import com.example.tasks.service.model.HeaderModel
 import com.example.tasks.service.constants.TaskConstants.HEADER.PERSON_KEY
 import com.example.tasks.service.constants.TaskConstants.HEADER.TOKEN_KEY
 import com.example.tasks.service.constants.TaskConstants.SHARED.PERSON_NAME
