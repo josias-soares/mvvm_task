@@ -20,7 +20,7 @@
     <View
         android:id="@+id/view_description"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        style="@style/ViewDivider"
         app:layout_constraintTop_toBottomOf="@+id/edit_description" />
 
     <TextView
@@ -45,7 +45,7 @@
     <View
         android:id="@+id/view_complete"
         android:layout_width="0dp"
-        android:layout_height="1dp"
+        style="@style/ViewDivider"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinner_priority" />
@@ -64,7 +64,7 @@
     <View
         android:id="@+id/view_date"
         android:layout_width="0dp"
-        android:layout_height="1dp"
+        style="@style/ViewDivider"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/check_complete" />
