@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.tasks.R
+import com.example.tasks.service.helper.FingerprintHelper
 import com.example.tasks.viewmodel.LoginViewModel
 import kotlinx.android.synthetic.main.activity_login.*
 
@@ -27,6 +28,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
         // Verifica se usuário está logado
         verifyLoggedUser()
+        FingerprintHelper.isAuthenticationAvailable(this)
     }
 
     override fun onClick(v: View) {
