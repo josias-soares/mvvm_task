@@ -10,7 +10,6 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.tasks.R
-import com.example.tasks.service.helper.FingerprintHelper
 import com.example.tasks.viewmodel.LoginViewModel
 import kotlinx.android.synthetic.main.activity_login.*
 import java.util.concurrent.Executor
@@ -29,15 +28,10 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         setListeners()
         observe()
 
-        // Verifica se usuário está logado
-        verifyLoggedUser()
+        mViewModel.isAuthenticationAvailable()
     }
 
     private fun showAuthentication() {
-        if (!FingerprintHelper.isAuthenticationAvailable(this)) {
-            return
-        }
-
         //Executor
         val executor: Executor = ContextCompat.getMainExecutor(this)
 
@@ -46,26 +40,17 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             this@LoginActivity,
             executor,
             object : BiometricPrompt.AuthenticationCallback() {
-                override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
-                    super.onAuthenticationError(errorCode, errString)
-                }
-
                 override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                     super.onAuthenticationSucceeded(result)
                     startActivity(Intent(this@LoginActivity, MainActivity::class.java))
                     finish()
                 }
-
-                override fun onAuthenticationFailed() {
-                    super.onAuthenticationFailed()
-                }
             })
 
         //BiometricPrompt INFO
         val info: BiometricPrompt.PromptInfo = BiometricPrompt.PromptInfo.Builder()
-            .setTitle("Titulo")
-            .setSubtitle("Subti")
-            .setDescription("descri")
+            .setTitle("Biometria")
+            .setDescription("Descrição")
             .setNegativeButtonText("Cancelar")
             .build()
 
@@ -89,12 +74,6 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         text_register.setOnClickListener(this)
     }
 
-    /**
-     * Verifica se usuário está logado
-     */
-    private fun verifyLoggedUser() {
-        mViewModel.verifyLoggedUser()
-    }
 
     /**
      * Observa ViewModel
@@ -109,7 +88,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             }
         })
 
-        mViewModel.loggedUser.observe(this, Observer { logged ->
+        mViewModel.fingerprint.observe(this, Observer { logged ->
             if (logged) {
                 showAuthentication()
             }

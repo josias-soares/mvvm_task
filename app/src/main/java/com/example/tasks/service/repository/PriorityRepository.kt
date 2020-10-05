@@ -30,7 +30,7 @@ class PriorityRepository(context: Context) : BaseRepository(context) {
 
                 if (response.code() == SUCCESS) {
                     response.body()?.let {
-                        mPriorityDAO.save(it)
+                        save(it)
                     }
                 }
             }
@@ -39,6 +39,8 @@ class PriorityRepository(context: Context) : BaseRepository(context) {
 
         })
     }
+
+    fun save(list: List<PriorityModel>) = mPriorityDAO.save(list)
 
     fun list() = mPriorityDAO.getAll()
 
