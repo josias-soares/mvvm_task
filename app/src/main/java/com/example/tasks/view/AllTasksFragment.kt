@@ -75,8 +75,16 @@ class AllTasksFragment : Fragment() {
         })
 
         mViewModel.taskRemoved.observe(viewLifecycleOwner, Observer {
-            if (it.success()){
+            if (it.success()) {
                 Toast.makeText(context, R.string.task_removed, Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(context, it.failure(), Toast.LENGTH_LONG).show()
+            }
+        })
+
+        mViewModel.taskUpdate.observe(viewLifecycleOwner, Observer {
+            if (it.success()) {
+                Toast.makeText(context, R.string.task_updated, Toast.LENGTH_LONG).show()
             } else {
                 Toast.makeText(context, it.failure(), Toast.LENGTH_LONG).show()
             }

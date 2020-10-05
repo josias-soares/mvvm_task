@@ -18,6 +18,9 @@ class AllTasksViewModel(application: Application) : AndroidViewModel(application
     private val mTaskRemoved = MutableLiveData<ValidationListener>()
     var taskRemoved: LiveData<ValidationListener> = mTaskRemoved
 
+    private val mTaskUpdate = MutableLiveData<ValidationListener>()
+    var taskUpdate: LiveData<ValidationListener> = mTaskUpdate
+
     fun list() {
         mTaskRepository.all(object : APIListener<List<TaskModel>> {
             override fun onSuccess(model: List<TaskModel>) {
@@ -43,9 +46,12 @@ class AllTasksViewModel(application: Application) : AndroidViewModel(application
         mTaskRepository.updateStatus(id, complete, object : APIListener<Boolean> {
             override fun onSuccess(model: Boolean) {
                 list()
+                mTaskUpdate.value = ValidationListener()
             }
 
-            override fun onFailure(failure: String) {}
+            override fun onFailure(failure: String) {
+                mTaskUpdate.value = ValidationListener(failure)
+            }
         })
     }
 
