@@ -3,7 +3,6 @@ package com.example.tasks.service.repository
 import android.content.Context
 import com.example.tasks.R
 import com.example.tasks.service.constants.TaskConstants.HTTP.SUCCESS
-import com.example.tasks.service.helper.ConnectionHelper.Companion.isConnectionAvailable
 import com.example.tasks.service.listener.APIListener
 import com.example.tasks.service.model.HeaderModel
 import com.example.tasks.service.repository.remote.PersonService
@@ -13,12 +12,12 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class PersonRepository(val context: Context) {
+class PersonRepository(val context: Context) : BaseRepository(context) {
 
     private val mRemote = RetrofitClient.createService(PersonService::class.java)
 
     fun login(email: String, password: String, listener: APIListener<HeaderModel>) {
-        if (!isConnectionAvailable(context)) {
+        if (!isConnectionAvailable()) {
             listener.onFailure(context.getString(R.string.ERROR_INTERNET_CONNECTION))
             return
         }
@@ -44,7 +43,7 @@ class PersonRepository(val context: Context) {
     }
 
     fun create(name: String, email: String, password: String, listener: APIListener<HeaderModel>) {
-        if (!isConnectionAvailable(context)) {
+        if (!isConnectionAvailable()) {
             listener.onFailure(context.getString(R.string.ERROR_INTERNET_CONNECTION))
             return
         }

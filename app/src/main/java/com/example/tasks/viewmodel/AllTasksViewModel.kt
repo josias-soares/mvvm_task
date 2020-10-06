@@ -10,10 +10,10 @@ import com.example.tasks.service.constants.TaskConstants.FILTER.NEXT
 import com.example.tasks.service.listener.APIListener
 import com.example.tasks.service.listener.ValidationListener
 import com.example.tasks.service.model.TaskModel
-import com.example.tasks.service.repository.TaskRepositoryImpl
+import com.example.tasks.service.repository.TaskRepository
 
 class AllTasksViewModel(application: Application) : AndroidViewModel(application) {
-    private val mTaskRepository = TaskRepositoryImpl(application)
+    private val mTaskRepository = TaskRepository(application)
     private var mTaskFilter: Int = ALL
 
     private val mTasks = MutableLiveData<List<TaskModel>>()
@@ -62,7 +62,7 @@ class AllTasksViewModel(application: Application) : AndroidViewModel(application
     }
 
     private fun updateStatus(id: Int, complete: Boolean) {
-        mTaskRepository.complete(id, complete, object : APIListener<Boolean> {
+        mTaskRepository.updateStatus(id, complete, object : APIListener<Boolean> {
             override fun onSuccess(model: Boolean) {
                 list(mTaskFilter)
                 mTaskUpdate.value = ValidationListener()
