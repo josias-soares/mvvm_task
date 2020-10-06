@@ -12,16 +12,15 @@ import com.example.tasks.service.listener.APIListener
 import com.example.tasks.service.listener.ValidationListener
 import com.example.tasks.service.model.HeaderModel
 import com.example.tasks.service.repository.PersonRepository
-import com.example.tasks.service.repository.PriorityRepository
+import com.example.tasks.service.repository.PriorityRepositoryImpl
 import com.example.tasks.service.repository.local.SecurityPreferences
-import com.example.tasks.service.repository.remote.HeaderHelper
+import com.example.tasks.service.repository.remote.RetrofitClient
 
-class LoginViewModel(
-    application: Application,
-    private val mPriorityRepository: PriorityRepository,
-    private val mPersonRepository: PersonRepository,
-    private val mSharedPreferences: SecurityPreferences
-) : AndroidViewModel(application) {
+class LoginViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val mPersonRepository = PersonRepository(application)
+    private val mPriorityRepository = PriorityRepositoryImpl(application)
+    private val mSharedPreferences = SecurityPreferences(application)
 
     private val mLogin = MutableLiveData<ValidationListener>()
     var login: LiveData<ValidationListener> = mLogin
@@ -38,6 +37,8 @@ class LoginViewModel(
                 mSharedPreferences.store(TOKEN_KEY, model.token)
                 mSharedPreferences.store(PERSON_KEY, model.personKey)
                 mSharedPreferences.store(PERSON_NAME, model.name)
+
+                RetrofitClient.addHeader(model.token, model.personKey)
 
                 mLogin.value = ValidationListener()
             }
@@ -56,6 +57,8 @@ class LoginViewModel(
         if (!everLogged) {
             mPriorityRepository.all()
         }
+
+        RetrofitClient.addHeader(tokenKey, personKey)
 
         if (FingerprintHelper.isAuthenticationAvailable(getApplication())) {
             mFingerprint.value = everLogged

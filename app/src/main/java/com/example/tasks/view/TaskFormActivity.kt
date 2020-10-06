@@ -7,12 +7,15 @@ import android.widget.ArrayAdapter
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import com.example.tasks.R
 import com.example.tasks.service.constants.TaskConstants.BUNDLE.TASKID
 import com.example.tasks.service.model.TaskModel
 import com.example.tasks.viewmodel.TaskFormViewModel
 import kotlinx.android.synthetic.main.activity_register.button_save
 import kotlinx.android.synthetic.main.activity_task_form.*
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.getViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.*
@@ -21,7 +24,7 @@ class TaskFormActivity : AppCompatActivity(), View.OnClickListener,
     DatePickerDialog.OnDateSetListener {
 
     // Dependence Injection
-    private val mViewModel: TaskFormViewModel by viewModel()
+    private val mViewModel : TaskFormViewModel by viewModel()
 
     private var mTaskId: Int = 0
     private val mListPriorityId: MutableList<Int> = arrayListOf()
@@ -90,7 +93,7 @@ class TaskFormActivity : AppCompatActivity(), View.OnClickListener,
     }
 
     private fun observe() {
-        mViewModel.priorities.observe(this, {
+        mViewModel.priorities.observe(this, Observer {
             val list: MutableList<String> = arrayListOf()
 
             for (priorityModel in it) {
@@ -102,7 +105,7 @@ class TaskFormActivity : AppCompatActivity(), View.OnClickListener,
             spinner_priority.adapter = adapter
         })
 
-        mViewModel.taskCreated.observe(this, {
+        mViewModel.taskCreated.observe(this, Observer {
             if (it.success()) {
                 if (mTaskId == 0) {
                     toast(R.string.task_created)
@@ -115,7 +118,7 @@ class TaskFormActivity : AppCompatActivity(), View.OnClickListener,
             }
         })
 
-        mViewModel.task.observe(this, {
+        mViewModel.task.observe(this, Observer {
             edit_description.setText(it.description)
             check_complete.isChecked = it.complete
             spinner_priority.setSelection(getIndexPriority(it.priorityId))

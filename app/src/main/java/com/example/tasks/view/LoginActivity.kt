@@ -8,20 +8,21 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.example.tasks.R
 import com.example.tasks.viewmodel.LoginViewModel
 import kotlinx.android.synthetic.main.activity_login.*
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.Executor
 
 class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
-    // Dependence Injection
-    private val mViewModel: LoginViewModel by viewModel()
+    private lateinit var mViewModel: LoginViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        mViewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
 
         // Inicializa eventos
         setListeners()
@@ -78,7 +79,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
      * Observa ViewModel
      */
     private fun observe() {
-        mViewModel.login.observe(this, {
+        mViewModel.login.observe(this, Observer {
             if (it.success()) {
                 startActivity(Intent(this, MainActivity::class.java))
                 finish()
@@ -87,7 +88,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             }
         })
 
-        mViewModel.fingerprint.observe(this, { logged ->
+        mViewModel.fingerprint.observe(this, Observer { logged ->
             if (logged) {
                 showAuthentication()
             }

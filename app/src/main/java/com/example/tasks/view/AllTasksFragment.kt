@@ -8,36 +8,28 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tasks.R
 import com.example.tasks.service.constants.TaskConstants
 import com.example.tasks.service.constants.TaskConstants.BUNDLE.TASKFILTER
 import com.example.tasks.service.listener.TaskListener
-import com.example.tasks.service.repository.PriorityRepository
 import com.example.tasks.view.adapter.TaskAdapter
 import com.example.tasks.viewmodel.AllTasksViewModel
-import org.koin.android.ext.android.get
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AllTasksFragment : Fragment() {
 
-    // Dependence Injection
-    private val mViewModel: AllTasksViewModel by viewModel()
-    private lateinit var mPriorityRepository: PriorityRepository
-
     private var mTaskFilter: Int = 0
-
+    private lateinit var mViewModel: AllTasksViewModel
     private lateinit var mListener: TaskListener
-    private lateinit var mAdapter: TaskAdapter
+    private val mAdapter = TaskAdapter()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, s: Bundle?): View {
+        mViewModel = ViewModelProvider(this).get(AllTasksViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_all_tasks, container, false)
 
         mTaskFilter = requireArguments().getInt(TASKFILTER, 0)
-
-        mPriorityRepository = get()
-        mAdapter = TaskAdapter(mPriorityRepository)
 
         val recycler = root.findViewById<RecyclerView>(R.id.recycler_all_tasks)
         recycler.layoutManager = LinearLayoutManager(context)
@@ -80,13 +72,13 @@ class AllTasksFragment : Fragment() {
     }
 
     private fun observe() {
-        mViewModel.tasks.observe(viewLifecycleOwner, {
+        mViewModel.tasks.observe(viewLifecycleOwner, Observer {
             if (it.isNotEmpty()) {
                 mAdapter.updateList(it)
             }
         })
 
-        mViewModel.taskRemoved.observe(viewLifecycleOwner, {
+        mViewModel.taskRemoved.observe(viewLifecycleOwner, Observer {
             if (it.success()) {
                 Toast.makeText(context, R.string.task_removed, Toast.LENGTH_LONG).show()
             } else {
@@ -94,7 +86,7 @@ class AllTasksFragment : Fragment() {
             }
         })
 
-        mViewModel.taskUpdate.observe(viewLifecycleOwner, {
+        mViewModel.taskUpdate.observe(viewLifecycleOwner, Observer {
             if (it.success()) {
                 Toast.makeText(context, R.string.task_updated, Toast.LENGTH_LONG).show()
             } else {

@@ -6,16 +6,16 @@ import com.example.tasks.service.constants.TaskConstants
 import com.example.tasks.service.helper.ConnectionHelper.Companion.isConnectionAvailable
 import com.example.tasks.service.listener.APIListener
 import com.example.tasks.service.model.TaskModel
+import com.example.tasks.service.repository.remote.RetrofitClient
 import com.example.tasks.service.repository.remote.TaskService
 import com.google.gson.Gson
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class TaskRepositoryImpl(
-    val context: Context,
-    val service: TaskService
-) : TaskRepository {
+class TaskRepositoryImpl(val context: Context) : TaskRepository {
+
+    private val mRemote = RetrofitClient.createService(TaskService::class.java)
 
     override fun all(listener: APIListener<List<TaskModel>>) {
         if (!isConnectionAvailable(context)) {
@@ -23,7 +23,7 @@ class TaskRepositoryImpl(
             return
         }
 
-        val call: Call<List<TaskModel>> = service.all()
+        val call: Call<List<TaskModel>> = mRemote.all()
 
         list(call, listener)
     }
@@ -34,7 +34,7 @@ class TaskRepositoryImpl(
             return
         }
 
-        val call: Call<List<TaskModel>> = service.nextWeek()
+        val call: Call<List<TaskModel>> = mRemote.nextWeek()
 
         list(call, listener)
     }
@@ -45,7 +45,7 @@ class TaskRepositoryImpl(
             return
         }
 
-        val call: Call<List<TaskModel>> = service.overdue()
+        val call: Call<List<TaskModel>> = mRemote.overdue()
 
         list(call, listener)
     }
@@ -57,7 +57,7 @@ class TaskRepositoryImpl(
         }
 
         val call: Call<Boolean> =
-            service.create(task.priorityId, task.description, task.dueDate, task.complete)
+            mRemote.create(task.priorityId, task.description, task.dueDate, task.complete)
 
         call.enqueue(object : Callback<Boolean> {
             override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
@@ -110,7 +110,7 @@ class TaskRepositoryImpl(
             return
         }
 
-        val call: Call<TaskModel> = service.load(id)
+        val call: Call<TaskModel> = mRemote.load(id)
 
         call.enqueue(object : Callback<TaskModel> {
             override fun onResponse(call: Call<TaskModel>, response: Response<TaskModel>) {
@@ -137,7 +137,7 @@ class TaskRepositoryImpl(
         }
 
         val call: Call<Boolean> =
-            service.update(task.id, task.priorityId, task.description, task.dueDate, task.complete)
+            mRemote.update(task.id, task.priorityId, task.description, task.dueDate, task.complete)
 
         call.enqueue(object : Callback<Boolean> {
             override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
@@ -164,9 +164,9 @@ class TaskRepositoryImpl(
         }
 
         val call: Call<Boolean> = if (complete) {
-            service.complete(id)
+            mRemote.complete(id)
         } else {
-            service.undo(id)
+            mRemote.undo(id)
         }
 
         call.enqueue(object : Callback<Boolean> {
@@ -193,7 +193,7 @@ class TaskRepositoryImpl(
             return
         }
 
-        val call: Call<Boolean> = service.delete(id)
+        val call: Call<Boolean> = mRemote.delete(id)
 
         call.enqueue(object : Callback<Boolean> {
             override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {

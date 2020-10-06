@@ -9,20 +9,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.tasks.R
 import com.example.tasks.service.listener.TaskListener
 import com.example.tasks.service.model.TaskModel
-import com.example.tasks.service.repository.PriorityRepository
+import com.example.tasks.service.repository.PriorityRepositoryImpl
 import java.text.SimpleDateFormat
 import java.util.*
 
-class TaskViewHolder(
-    itemView: View,
-    val listener: TaskListener,
-    private val mPriorityRepository: PriorityRepository
-) :
+class TaskViewHolder(itemView: View, val listener: TaskListener) :
     RecyclerView.ViewHolder(itemView) {
 
     private val mDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
-    //private val mPriorityRepository = PriorityRepositoryImpl(itemView.context, get<PriorityService>())
+    private val mPriorityRepository = PriorityRepositoryImpl(itemView.context)
 
     private var mTextDescription: TextView = itemView.findViewById(R.id.text_description)
     private var mTextPriority: TextView = itemView.findViewById(R.id.text_priority)
@@ -51,7 +47,7 @@ class TaskViewHolder(
         // Eventos
         mTextDescription.setOnClickListener { listener.onListClick(task.id) }
         mImageTask.setOnClickListener {
-            if (task.complete) {
+            if (task.complete){
                 listener.onUndoClick(task.id)
             } else {
                 listener.onCompleteClick(task.id)
@@ -62,7 +58,7 @@ class TaskViewHolder(
             AlertDialog.Builder(itemView.context)
                 .setTitle(R.string.remocao_de_tarefa)
                 .setMessage(R.string.remover_tarefa)
-                .setPositiveButton(R.string.sim) { _, _ ->
+                .setPositiveButton(R.string.sim) { dialog, which ->
                     listener.onDeleteClick(task.id)
                 }
                 .setNeutralButton(R.string.cancelar, null)

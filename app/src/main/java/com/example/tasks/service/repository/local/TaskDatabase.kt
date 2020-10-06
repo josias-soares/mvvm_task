@@ -10,19 +10,19 @@ import com.example.tasks.service.model.PriorityModel
 abstract class TaskDatabase : RoomDatabase() {
     abstract fun priorityDAO() : PriorityDAO
 
-//    companion object {
-//        private lateinit var INSTANCE: TaskDatabase
-//
-//        fun getDatabase(context: Context): TaskDatabase {
-//            if (!Companion::INSTANCE.isInitialized) {
-//                synchronized(TaskDatabase::class) {
-//                    INSTANCE = Room.databaseBuilder(context, TaskDatabase::class.java, "tasksDB")
-//                        .allowMainThreadQueries()
-//                        .build()
-//                }
-//            }
-//            return INSTANCE
-//        }
-//    }
+    companion object {
+        private lateinit var INSTANCE: TaskDatabase
+
+        fun getDatabase(context: Context): TaskDatabase {
+            if (!Companion::INSTANCE.isInitialized) {
+                synchronized(TaskDatabase::class) {
+                    INSTANCE = Room.databaseBuilder(context, TaskDatabase::class.java, "tasksDB")
+                        .allowMainThreadQueries()
+                        .build()
+                }
+            }
+            return INSTANCE
+        }
+    }
 
 }
