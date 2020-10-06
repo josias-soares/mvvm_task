@@ -7,25 +7,22 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.*
 import com.example.tasks.R
 import com.example.tasks.viewmodel.MainViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var mViewModel: MainViewModel
+    private val mViewModel: MainViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        mViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -82,14 +79,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun observe() {
-        mViewModel.userName.observe(this, Observer {
+        mViewModel.userName.observe(this, {
             val nav = findViewById<NavigationView>(R.id.nav_view)
             val header = nav.getHeaderView(0)
 
             header.findViewById<TextView>(R.id.text_name).text = it
         })
 
-        mViewModel.logout.observe(this, Observer {
+        mViewModel.logout.observe(this, {
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
         })

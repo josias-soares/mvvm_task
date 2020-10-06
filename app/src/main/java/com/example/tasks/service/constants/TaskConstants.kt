@@ -33,4 +33,8 @@ class TaskConstants private constructor() {
         const val EXPIRED = 2
     }
 
+    object RETROFIT{
+        const val BASE_URL = "http://devmasterteam.com/CursoAndroidAPI/"
+    }
+
 }

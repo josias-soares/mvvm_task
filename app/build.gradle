@@ -67,11 +67,13 @@ dependencies {
     implementation 'androidx.biometric:biometric:1.0.1'
 
     // Koin
-//    implementation "org.koin:koin-core:$koin_version"
-//    implementation "org.koin:koin-android:$koin_version"
     implementation "org.koin:koin-androidx-scope:$koin_version"
     implementation "org.koin:koin-androidx-viewmodel:$koin_version"
     implementation "org.koin:koin-androidx-fragment:$koin_version"
+    // kotlinx serialization converter for retrofit
+    implementation 'com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.4.0'
+    // Kotlinx Serialization
+    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.11.1'
 
     kapt 'androidx.room:room-compiler:2.2.5'
     testImplementation 'junit:junit:4.12'

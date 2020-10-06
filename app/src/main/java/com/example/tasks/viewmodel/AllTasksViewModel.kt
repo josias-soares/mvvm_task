@@ -10,10 +10,13 @@ import com.example.tasks.service.constants.TaskConstants.FILTER.NEXT
 import com.example.tasks.service.listener.APIListener
 import com.example.tasks.service.listener.ValidationListener
 import com.example.tasks.service.model.TaskModel
-import com.example.tasks.service.repository.TaskRepositoryImpl
+import com.example.tasks.service.repository.TaskRepository
 
-class AllTasksViewModel(application: Application) : AndroidViewModel(application) {
-    private val mTaskRepository = TaskRepositoryImpl(application)
+class AllTasksViewModel(
+    application: Application,
+    private val mTaskRepository: TaskRepository
+) : AndroidViewModel(application) {
+    //private val mTaskRepository = TaskRepositoryImpl(application)
     private var mTaskFilter: Int = ALL
 
     private val mTasks = MutableLiveData<List<TaskModel>>()

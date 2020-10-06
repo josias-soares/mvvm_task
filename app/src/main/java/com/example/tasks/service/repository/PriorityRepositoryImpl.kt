@@ -4,30 +4,30 @@ import android.content.Context
 import com.example.tasks.service.constants.TaskConstants.HTTP.SUCCESS
 import com.example.tasks.service.helper.ConnectionHelper.Companion.isConnectionAvailable
 import com.example.tasks.service.model.PriorityModel
-import com.example.tasks.service.repository.local.TaskDatabase
+import com.example.tasks.service.repository.local.PriorityDAO
 import com.example.tasks.service.repository.remote.PriorityService
-import com.example.tasks.service.repository.remote.RetrofitClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class PriorityRepositoryImpl(val context: Context) : PriorityRepository {
-
-    private val mRemote = RetrofitClient.createService(PriorityService::class.java)
-    private val mPriorityDAO = TaskDatabase.getDatabase(context).priorityDAO()
+class PriorityRepositoryImpl(
+    val context: Context,
+    val service: PriorityService,
+    val priorityDAO: PriorityDAO
+) : PriorityRepository {
 
     override fun all() {
         if (!isConnectionAvailable(context)) {
             return
         }
 
-        val call: Call<List<PriorityModel>> = mRemote.list()
+        val call: Call<List<PriorityModel>> = service.list()
 
         call.enqueue(object : Callback<List<PriorityModel>> {
             override fun onResponse(
                 call: Call<List<PriorityModel>>, response: Response<List<PriorityModel>>
             ) {
-                mPriorityDAO.clear()
+                priorityDAO.clear()
 
                 if (response.code() == SUCCESS) {
                     response.body()?.let {
@@ -42,9 +42,9 @@ class PriorityRepositoryImpl(val context: Context) : PriorityRepository {
         })
     }
 
-    override fun save(list: List<PriorityModel>) = mPriorityDAO.save(list)
+    override fun save(list: List<PriorityModel>) = priorityDAO.save(list)
 
-    override fun list() = mPriorityDAO.getAll()
+    override fun list() = priorityDAO.getAll()
 
-    override fun get(id: Int) = mPriorityDAO.getById(id)
+    override fun get(id: Int) = priorityDAO.getById(id)
 }
