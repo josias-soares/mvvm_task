@@ -11,10 +11,11 @@ import com.example.tasks.service.model.TaskModel
 import com.example.tasks.service.repository.PriorityRepository
 import com.example.tasks.service.repository.TaskRepository
 
-class TaskFormViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val mPriorityRepository = PriorityRepository(application)
-    private val mTaskRepository = TaskRepository(application)
+class TaskFormViewModel(
+    application: Application,
+    private val mPriorityRepository: PriorityRepository,
+    private val mTaskRepository: TaskRepository
+) : AndroidViewModel(application) {
 
     private val mPriorities = MutableLiveData<List<PriorityModel>>()
     var priorities: LiveData<List<PriorityModel>> = mPriorities

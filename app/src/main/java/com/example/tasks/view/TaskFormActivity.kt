@@ -7,30 +7,29 @@ import android.widget.ArrayAdapter
 import android.widget.DatePicker
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.example.tasks.R
 import com.example.tasks.service.constants.TaskConstants.BUNDLE.TASKID
 import com.example.tasks.service.model.TaskModel
 import com.example.tasks.viewmodel.TaskFormViewModel
 import kotlinx.android.synthetic.main.activity_register.button_save
 import kotlinx.android.synthetic.main.activity_task_form.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
 class TaskFormActivity : AppCompatActivity(), View.OnClickListener,
     DatePickerDialog.OnDateSetListener {
 
+    // Dependence Injection
+    private val mViewModel: TaskFormViewModel by viewModel()
+
     private var mTaskId: Int = 0
-    private lateinit var mViewModel: TaskFormViewModel
     private val mListPriorityId: MutableList<Int> = arrayListOf()
     private val mDateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_task_form)
-
-        mViewModel = ViewModelProvider(this).get(TaskFormViewModel::class.java)
 
         // Inicializa eventos
         listeners()
@@ -91,7 +90,7 @@ class TaskFormActivity : AppCompatActivity(), View.OnClickListener,
     }
 
     private fun observe() {
-        mViewModel.priorities.observe(this, Observer {
+        mViewModel.priorities.observe(this, {
             val list: MutableList<String> = arrayListOf()
 
             for (priorityModel in it) {
@@ -103,9 +102,9 @@ class TaskFormActivity : AppCompatActivity(), View.OnClickListener,
             spinner_priority.adapter = adapter
         })
 
-        mViewModel.taskCreated.observe(this, Observer {
+        mViewModel.taskCreated.observe(this, {
             if (it.success()) {
-                if (mTaskId == 0){
+                if (mTaskId == 0) {
                     toast(R.string.task_created)
                 } else {
                     toast(R.string.task_updated)
@@ -116,7 +115,7 @@ class TaskFormActivity : AppCompatActivity(), View.OnClickListener,
             }
         })
 
-        mViewModel.task.observe(this, Observer {
+        mViewModel.task.observe(this, {
             edit_description.setText(it.description)
             check_complete.isChecked = it.complete
             spinner_priority.setSelection(getIndexPriority(it.priorityId))

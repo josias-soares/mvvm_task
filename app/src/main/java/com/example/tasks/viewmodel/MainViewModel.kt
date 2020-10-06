@@ -9,9 +9,11 @@ import com.example.tasks.service.constants.TaskConstants.SHARED.PERSON_NAME
 import com.example.tasks.service.constants.TaskConstants.SHARED.TOKEN_KEY
 import com.example.tasks.service.repository.local.SecurityPreferences
 
-class MainViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val mSharedPreferences = SecurityPreferences(application)
+class MainViewModel(
+    application: Application,
+    private val mSharedPreferences: SecurityPreferences
+) :
+    AndroidViewModel(application) {
 
     private val mUserName = MutableLiveData<String>()
     var userName: LiveData<String> = mUserName

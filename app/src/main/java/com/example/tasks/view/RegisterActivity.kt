@@ -10,16 +10,15 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.tasks.R
 import com.example.tasks.viewmodel.RegisterViewModel
 import kotlinx.android.synthetic.main.activity_register.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RegisterActivity : AppCompatActivity(), View.OnClickListener {
 
-    private lateinit var mViewModel: RegisterViewModel
+    private val mViewModel: RegisterViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
-
-        mViewModel = ViewModelProvider(this).get(RegisterViewModel::class.java)
 
         // Inicializa eventos
         listeners()
@@ -39,7 +38,7 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun observe() {
-        mViewModel.create.observe(this, Observer {
+        mViewModel.create.observe(this, {
             if (it.success()) {
                 startActivity(Intent(this, MainActivity::class.java))
             } else {
